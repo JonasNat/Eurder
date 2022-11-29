@@ -4,17 +4,15 @@ import com.switchfully.eurder.domain.Address;
 import com.switchfully.eurder.domain.Role;
 import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.dto.CreateCustomerDTO;
-import com.switchfully.eurder.exceptions.CustomerAlreadyExistsException;
-import com.switchfully.eurder.exceptions.InvalidEmailAddressException;
-import com.switchfully.eurder.exceptions.RequiredFieldIsEmptyException;
+import com.switchfully.eurder.exceptions.user.CustomerAlreadyExistsException;
+import com.switchfully.eurder.exceptions.user.InvalidEmailAddressException;
+import com.switchfully.eurder.exceptions.user.RequiredFieldIsEmptyException;
 import com.switchfully.eurder.mapper.UserMapper;
 import com.switchfully.eurder.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
 
 class UserServiceTest {
     private User customer1;
@@ -35,14 +33,7 @@ class UserServiceTest {
     }
 
     @Test
-    void givenARepositoryOfUsers_whenRegisteringANewCustomer_customerIsAddedToTheRepository() {
-        userRepository.create(customer1);
-
-        assertThat(userRepository.getAll()).contains(customer1);
-    }
-
-    @Test
-    void givenARepositoryOfUsers_whenRegisteringANewCustomerWithAKnownEmailAddress_exceptionIsThrown() {
+    void givenARepositoryOfUsers_whenRegisteringANewCustomerWithAnExistingEmailAddress_exceptionIsThrown() {
         userRepository.create(customer1);
         CreateCustomerDTO userToRegister = new CreateCustomerDTO(
                 "firstname2",
@@ -89,4 +80,5 @@ class UserServiceTest {
                 .isInstanceOf(InvalidEmailAddressException.class)
                 .hasMessageContaining("Invalid email");
     }
+
 }

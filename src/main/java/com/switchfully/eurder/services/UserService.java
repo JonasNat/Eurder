@@ -2,7 +2,7 @@ package com.switchfully.eurder.services;
 
 import com.switchfully.eurder.dto.CreateCustomerDTO;
 import com.switchfully.eurder.dto.CustomerDTO;
-import com.switchfully.eurder.exceptions.CustomerAlreadyExistsException;
+import com.switchfully.eurder.exceptions.user.CustomerAlreadyExistsException;
 import com.switchfully.eurder.mapper.UserMapper;
 import com.switchfully.eurder.repositories.UserRepository;
 import org.springframework.stereotype.Service;

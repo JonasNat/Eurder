@@ -1,7 +1,7 @@
 package com.switchfully.eurder.domain;
 
-import com.switchfully.eurder.exceptions.InvalidEmailAddressException;
-import com.switchfully.eurder.exceptions.RequiredFieldIsEmptyException;
+import com.switchfully.eurder.exceptions.user.InvalidEmailAddressException;
+import com.switchfully.eurder.exceptions.user.RequiredFieldIsEmptyException;
 
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -44,6 +44,10 @@ public class User {
 
     public String getEmailAddress() {
         return emailAddress;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     public Address getAddress() {

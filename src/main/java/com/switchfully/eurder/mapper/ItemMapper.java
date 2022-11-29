@@ -18,10 +18,10 @@ public class ItemMapper {
 
     public Item toItem(CreateItemDTO itemToAdd) {
         return new Item(
-                itemToAdd.getName(),
-                itemToAdd.getDescription(),
-                itemToAdd.getPrice(),
-                itemToAdd.getAmount()
+                itemToAdd.name(),
+                itemToAdd.description(),
+                itemToAdd.price(),
+                itemToAdd.amount()
         );
     }
 

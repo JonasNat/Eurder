@@ -1,4 +1,4 @@
-package com.switchfully.eurder.exceptions;
+package com.switchfully.eurder.exceptions.user;
 
 public class UserNotFoundException extends RuntimeException{
     public UserNotFoundException(String message) {

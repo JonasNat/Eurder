@@ -17,13 +17,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
-
     @LocalServerPort
     private int port;
 
     @Test
     void givenARequestBody_whenRegisteringNewCustomer_httpStatusCreatedAndNewCustomerReturned() {
-
         CreateCustomerDTO userToRegister = new CreateCustomerDTO(
                 "firstname",
                 "lastname",
@@ -32,7 +30,8 @@ class UserControllerTest {
                 new Address("street", "housenumber", "0000", "city"),
                 "0000000000");
 
-        CustomerDTO customerDTO = RestAssured
+        CustomerDTO customerDTO =
+                RestAssured
                 .given().contentType(JSON).body(userToRegister).accept(JSON)
                 .when().port(port).post("/users")
                 .then().assertThat().statusCode(HttpStatus.SC_CREATED).extract().as(CustomerDTO.class);
@@ -42,5 +41,21 @@ class UserControllerTest {
         assertThat(customerDTO.getEmailAddress()).isEqualTo(userToRegister.emailAddress());
         assertThat(customerDTO.getPhoneNumber()).isEqualTo(userToRegister.phoneNumber());
         assertThat(customerDTO.getAddress()).isEqualTo(userToRegister.address());
+    }
+
+    @Test
+    void givenARequestBodyWithInvalidEmail_whenRegisteringNewCustomer_httpStatusBadRequest() {
+        CreateCustomerDTO userToRegister = new CreateCustomerDTO(
+                "firstname",
+                "lastname",
+                "invalidEmail",
+                "password",
+                new Address("street", "housenumber", "0000", "city"),
+                "0000000000");
+
+        RestAssured
+                .given().contentType(JSON).body(userToRegister).accept(JSON)
+                .when().port(port).post("/users")
+                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 }

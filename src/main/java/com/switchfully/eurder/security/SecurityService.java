@@ -2,9 +2,9 @@ package com.switchfully.eurder.security;
 
 import com.switchfully.eurder.domain.Role;
 import com.switchfully.eurder.domain.User;
-import com.switchfully.eurder.exceptions.UnauthorizedException;
-import com.switchfully.eurder.exceptions.UserNotFoundException;
-import com.switchfully.eurder.exceptions.WrongPasswordException;
+import com.switchfully.eurder.exceptions.security.UnauthorizedException;
+import com.switchfully.eurder.exceptions.user.UserNotFoundException;
+import com.switchfully.eurder.exceptions.security.WrongPasswordException;
 import com.switchfully.eurder.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 

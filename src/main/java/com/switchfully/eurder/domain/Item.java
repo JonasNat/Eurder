@@ -1,5 +1,7 @@
 package com.switchfully.eurder.domain;
 
+import com.switchfully.eurder.exceptions.user.RequiredFieldIsEmptyException;
+
 import java.util.Objects;
 import java.util.UUID;
 
@@ -12,7 +14,7 @@ public class Item {
 
     public Item(String name, String description, double price, long amount) {
         id = UUID.randomUUID().toString();
-        this.name = name;
+        this.name = validateField(name);
         this.description = description;
         this.price = price;
         this.amount = amount;
@@ -36,6 +38,13 @@ public class Item {
 
     public long getAmount() {
         return amount;
+    }
+
+    private String validateField(String field) {
+        if (field == null || field.isEmpty()) {
+            throw new RequiredFieldIsEmptyException("Required field missing");
+        }
+        return field;
     }
 
     @Override

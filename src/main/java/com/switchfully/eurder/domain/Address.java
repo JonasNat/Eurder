@@ -1,6 +1,6 @@
 package com.switchfully.eurder.domain;
 
-import com.switchfully.eurder.exceptions.RequiredFieldIsEmptyException;
+import com.switchfully.eurder.exceptions.user.RequiredFieldIsEmptyException;
 
 public record Address(String streetName, String houseNumber, String postalCode, String city) {
     public Address(String streetName, String houseNumber, String postalCode, String city) {

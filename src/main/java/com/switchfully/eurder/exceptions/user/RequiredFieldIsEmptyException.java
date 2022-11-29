@@ -1,4 +1,4 @@
-package com.switchfully.eurder.exceptions;
+package com.switchfully.eurder.exceptions.user;
 
 public class RequiredFieldIsEmptyException extends RuntimeException{
     public RequiredFieldIsEmptyException(String message) {
