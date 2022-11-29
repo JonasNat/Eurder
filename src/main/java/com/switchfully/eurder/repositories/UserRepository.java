@@ -15,7 +15,7 @@ public class UserRepository {
 
     public UserRepository() {
         users = new HashMap<>();
-        users.put("1", new User("Jonas",
+        users.put("0", new User("Jonas",
                 "Nata",
                 "jonas@eurder.com",
                 new Address("Teststraat", "50", "2000", "Antwerp"),
@@ -29,6 +29,7 @@ public class UserRepository {
     }
 
     public User create(User user) {
-        return users.put(user.getId(), user);
+        users.put(user.getId(), user);
+        return user;
     }
 }

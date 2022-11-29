@@ -1,7 +1,7 @@
 package com.switchfully.eurder.services;
 
 import com.switchfully.eurder.dto.CreateCustomerDTO;
-import com.switchfully.eurder.dto.UserDTO;
+import com.switchfully.eurder.dto.CustomerDTO;
 import com.switchfully.eurder.exceptions.CustomerAlreadyExistsException;
 import com.switchfully.eurder.mapper.UserMapper;
 import com.switchfully.eurder.repositories.UserRepository;
@@ -17,8 +17,8 @@ public class UserService {
         this.mapper = mapper;
     }
 
-    public UserDTO register(CreateCustomerDTO userToRegister) {
-        if (repository.getAll().stream().anyMatch(user -> user.getEmailAddress() == userToRegister.getEmailAddress())) {
+    public CustomerDTO register(CreateCustomerDTO userToRegister) {
+        if (repository.getAll().stream().anyMatch(user -> user.getEmailAddress().equals(userToRegister.emailAddress()))) {
             throw new CustomerAlreadyExistsException("Customer with this email already exists");
         }
         return mapper.toDto(repository.create(mapper.toUser(userToRegister)));
