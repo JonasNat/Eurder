@@ -28,7 +28,7 @@ class UserServiceTest {
                 "firstname",
                 "lastname",
                 "email@eurder.com",
-                new Address("street", "housenumber", "0000", "city"),
+                password, new Address("street", "housenumber", "0000", "city"),
                 "0000000000",
                 Role.CUSTOMER);
     }

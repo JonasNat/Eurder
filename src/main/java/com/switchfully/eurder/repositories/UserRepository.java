@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class UserRepository {
@@ -18,7 +19,7 @@ public class UserRepository {
         users.put("0", new User("Jonas",
                 "Nata",
                 "jonas@eurder.com",
-                new Address("Teststraat", "50", "2000", "Antwerp"),
+                password, new Address("Teststraat", "50", "2000", "Antwerp"),
                 "0498416686",
                 Role.ADMIN)
         );
@@ -26,6 +27,10 @@ public class UserRepository {
 
     public List<User> getAll() {
         return users.values().stream().toList();
+    }
+
+    public Optional<User> findByEmailAddress(String emailAddress) {
+       return users.values().stream().filter(user -> user.getEmailAddress().equals(emailAddress)).findFirst();
     }
 
     public User create(User user) {

@@ -12,17 +12,20 @@ public class User {
     private final String firstName;
     private final String lastName;
     private final String emailAddress;
+
+    private final String password;
     private final Address address;
     private final String phoneNumber;
     private final Role role;
 
     private static final String EMAIL_REGEX = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
-    public User(String firstName, String lastName, String emailAddress, Address address, String phoneNumber, Role role) {
+    public User(String firstName, String lastName, String emailAddress, String password, Address address, String phoneNumber, Role role) {
         id = UUID.randomUUID().toString();
         this.firstName = firstName;
         this.lastName = validateField(lastName);
         this.emailAddress = validateEmail(emailAddress);
+        this.password = password;
         this.address = address;
         this.phoneNumber = validateField(phoneNumber);
         this.role = role == null ? Role.CUSTOMER : role;
@@ -70,6 +73,10 @@ public class User {
             throw new RequiredFieldIsEmptyException("Required field missing");
         }
         return field;
+    }
+
+    public boolean doesPasswordMatch(String password) {
+        return password.equals(this.password);
     }
 
 }
