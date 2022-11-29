@@ -28,6 +28,7 @@ class UserControllerTest {
                 "firstname",
                 "lastname",
                 "email@eurder.com",
+                "password",
                 new Address("street", "housenumber", "0000", "city"),
                 "0000000000");
 

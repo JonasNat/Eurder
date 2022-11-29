@@ -6,6 +6,8 @@ public record CreateCustomerDTO(
         String firstName,
         String lastName,
         String emailAddress,
+
+        String password,
         Address address,
         String phoneNumber) {
 }

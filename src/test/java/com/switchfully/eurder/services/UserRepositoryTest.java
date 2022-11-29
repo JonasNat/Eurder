@@ -28,7 +28,8 @@ class UserServiceTest {
                 "firstname",
                 "lastname",
                 "email@eurder.com",
-                password, new Address("street", "housenumber", "0000", "city"),
+                "password",
+                new Address("street", "housenumber", "0000", "city"),
                 "0000000000",
                 Role.CUSTOMER);
     }
@@ -47,6 +48,7 @@ class UserServiceTest {
                 "firstname2",
                 "lastname2",
                 "email@eurder.com",
+                "password",
                 new Address("street", "housenumber", "0000", "city"),
                 "0000000000"
         );
@@ -62,6 +64,7 @@ class UserServiceTest {
                 "firstname2",
                 "lastname2",
                 "email@eurder.com",
+                "password",
                 new Address("street", "housenumber", "0000", "city"),
                 ""
         );
@@ -77,6 +80,7 @@ class UserServiceTest {
                 "firstname2",
                 "lastname2",
                 "invalidEmail",
+                "password",
                 new Address("street", "housenumber", "0000", "city"),
                 "0000000000"
         );

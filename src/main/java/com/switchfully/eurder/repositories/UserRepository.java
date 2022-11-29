@@ -19,7 +19,8 @@ public class UserRepository {
         users.put("0", new User("Jonas",
                 "Nata",
                 "jonas@eurder.com",
-                password, new Address("Teststraat", "50", "2000", "Antwerp"),
+                "password",
+                new Address("Teststraat", "50", "2000", "Antwerp"),
                 "0498416686",
                 Role.ADMIN)
         );

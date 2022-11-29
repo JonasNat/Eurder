@@ -21,7 +21,8 @@ public class UserMapper {
         return new User(userToRegister.firstName(),
                 userToRegister.lastName(),
                 userToRegister.emailAddress(),
-                password, userToRegister.address(),
+                userToRegister.password(),
+                userToRegister.address(),
                 userToRegister.phoneNumber(),
                 Role.CUSTOMER);
     }

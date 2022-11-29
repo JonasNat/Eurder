@@ -12,7 +12,6 @@ public class User {
     private final String firstName;
     private final String lastName;
     private final String emailAddress;
-
     private final String password;
     private final Address address;
     private final String phoneNumber;
@@ -25,7 +24,7 @@ public class User {
         this.firstName = firstName;
         this.lastName = validateField(lastName);
         this.emailAddress = validateEmail(emailAddress);
-        this.password = password;
+        this.password = validateField(password);
         this.address = address;
         this.phoneNumber = validateField(phoneNumber);
         this.role = role == null ? Role.CUSTOMER : role;
@@ -78,5 +77,4 @@ public class User {
     public boolean doesPasswordMatch(String password) {
         return password.equals(this.password);
     }
-
 }

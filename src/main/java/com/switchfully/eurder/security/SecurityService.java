@@ -2,7 +2,9 @@ package com.switchfully.eurder.security;
 
 import com.switchfully.eurder.domain.Role;
 import com.switchfully.eurder.domain.User;
+import com.switchfully.eurder.exceptions.UnauthorizedException;
 import com.switchfully.eurder.exceptions.UserNotFoundException;
+import com.switchfully.eurder.exceptions.WrongPasswordException;
 import com.switchfully.eurder.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +23,7 @@ public class SecurityService {
         EmailPassword usernamePassword = getUsernamePassword(authorization);
         User user = userRepository.findByEmailAddress(usernamePassword.email()).orElseThrow(() -> new UserNotFoundException("User not found"));
         if (!user.doesPasswordMatch(usernamePassword.password())) {
-            throw new WrongPasswordException();
+            throw new WrongPasswordException("Wrong password");
         }
         if (!user.getRole().equals(securityRole)) {
             throw new UnauthorizedException("You are not authorized to access this information");
