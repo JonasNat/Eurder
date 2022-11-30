@@ -7,13 +7,14 @@ public class OrderLine {
     private final String id;
     private final String itemId;
     private final long amount;
-    private final LocalDate shippingDate;
+    private LocalDate shippingDate = null;
+
+    private double orderLinePrice;
 
     public OrderLine(String itemId, long amount) {
         id = UUID.randomUUID().toString();
         this.itemId = itemId;
         this.amount = amount;
-        shippingDate = LocalDate.now();
     }
 
     public String getId() {
@@ -30,5 +31,17 @@ public class OrderLine {
 
     public LocalDate getShippingDate() {
         return shippingDate;
+    }
+
+    public void setShippingDate(LocalDate shippingDate) {
+        this.shippingDate = shippingDate;
+    }
+
+    public double getOrderLinePrice() {
+        return orderLinePrice;
+    }
+
+    public void setOrderLinePrice(double orderLinePrice) {
+        this.orderLinePrice = orderLinePrice;
     }
 }

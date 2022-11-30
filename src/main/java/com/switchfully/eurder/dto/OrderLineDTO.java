@@ -1,25 +1,31 @@
 package com.switchfully.eurder.dto;
 
-public class OrderLineDTO {
-    private final String itemName;
-    private final long amount;
-    private final double totalPrice;
+import java.time.LocalDate;
+import java.util.Objects;
 
-    public OrderLineDTO(String itemName, long amount, double totalPrice) {
-        this.itemName = itemName;
-        this.amount = amount;
-        this.totalPrice = totalPrice;
+public record OrderLineDTO(String itemName, long amount, double totalPrice, LocalDate shippingDate) {
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (OrderLineDTO) obj;
+        return Objects.equals(this.itemName, that.itemName) &&
+                this.amount == that.amount &&
+                Double.doubleToLongBits(this.totalPrice) == Double.doubleToLongBits(that.totalPrice);
     }
 
-    public String getItemName() {
-        return itemName;
+    @Override
+    public int hashCode() {
+        return Objects.hash(itemName, amount, totalPrice);
     }
 
-    public long getAmount() {
-        return amount;
+    @Override
+    public String toString() {
+        return "OrderLineDTO[" +
+                "itemName=" + itemName + ", " +
+                "amount=" + amount + ", " +
+                "totalPrice=" + totalPrice + ']';
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
-    }
 }

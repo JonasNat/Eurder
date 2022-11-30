@@ -68,10 +68,10 @@ class ItemControllerTest {
                         .when().port(port).post("/items")
                         .then().assertThat().statusCode(HttpStatus.SC_CREATED).extract().as(ItemDTO.class);
 
-        assertThat(itemDTO.getName()).isEqualTo(itemToAdd.name());
-        assertThat(itemDTO.getDescription()).isEqualTo(itemToAdd.description());
-        assertThat(itemDTO.getPrice()).isEqualTo(itemToAdd.price());
-        assertThat(itemDTO.getAmount()).isEqualTo(itemToAdd.amount());
+        assertThat(itemDTO.name()).isEqualTo(itemToAdd.name());
+        assertThat(itemDTO.description()).isEqualTo(itemToAdd.description());
+        assertThat(itemDTO.price()).isEqualTo(itemToAdd.price());
+        assertThat(itemDTO.amount()).isEqualTo(itemToAdd.amount());
     }
 
     @Test

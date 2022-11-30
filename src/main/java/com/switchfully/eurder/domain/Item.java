@@ -40,8 +40,11 @@ public class Item {
         return amount;
     }
 
-    public void setAmount(long amount) {
-        this.amount = amount;
+    public void subtractAmount(long amount) {
+        if (amount < 0) {
+            throw new IllegalArgumentException("Amount can't be negative");
+        }
+        this.amount -= amount;
     }
 
     private String validateField(String field) {
