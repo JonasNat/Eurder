@@ -80,6 +80,8 @@ class OrderControllerTest {
 
     @Test
     void givenARequestBodyWithInvalidItemId_whenPlacingANewOrder_httpStatusBadRequest() {
+        CreateOrderLineDTO orderLine3 = new CreateOrderLineDTO("InvalidId", 5);
+        orderToPlace = new CreateOrderDTO(List.of(orderLine3));
                 RestAssured
                         .given().contentType(JSON).body(orderToPlace).accept(JSON)
                         .auth().preemptive().basic(customer.getEmailAddress(), customer.getPassword())
