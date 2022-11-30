@@ -40,6 +40,10 @@ public class Item {
         return amount;
     }
 
+    public void setAmount(long amount) {
+        this.amount = amount;
+    }
+
     private String validateField(String field) {
         if (field == null || field.isEmpty()) {
             throw new RequiredFieldIsEmptyException("Required field missing");

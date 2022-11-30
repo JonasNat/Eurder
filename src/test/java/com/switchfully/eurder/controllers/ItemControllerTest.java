@@ -91,7 +91,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void givenRequestHeaderWithIncorrectAuthorization_whenAddingItem_throwsUnauthorizedException() {
+    void givenRequestHeaderWithIncorrectAuthorization_whenAddingItem_httpStatusForbidden() {
         CreateItemDTO itemToAdd = new CreateItemDTO(
                 "name",
                 "testItem",
@@ -107,7 +107,7 @@ class ItemControllerTest {
     }
 
     @Test
-    void givenCustomer_whenAddingItem_throwsUnauthorizedException() {
+    void givenCustomer_whenAddingItem_httpStatusForbidden() {
         CreateItemDTO itemToAdd = new CreateItemDTO(
                 "name",
                 "testItem",
@@ -120,5 +120,21 @@ class ItemControllerTest {
                 .auth().preemptive().basic(customer.getEmailAddress(), customer.getPassword())
                 .when().port(port).post("/items")
                 .then().assertThat().statusCode(HttpStatus.SC_FORBIDDEN);
+    }
+
+    @Test
+    void givenUnknownUser_whenAddingItem_httpStatusForbidden() {
+        CreateItemDTO itemToAdd = new CreateItemDTO(
+                "name",
+                "testItem",
+                6.0,
+                30
+        );
+
+        RestAssured
+                .given().contentType(JSON).body(itemToAdd).accept(JSON)
+                .auth().preemptive().basic("invalidEmail", customer.getPassword())
+                .when().port(port).post("/items")
+                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 }

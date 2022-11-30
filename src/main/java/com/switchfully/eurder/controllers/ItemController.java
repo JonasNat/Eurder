@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/items")
 public class ItemController {
@@ -18,6 +20,12 @@ public class ItemController {
     public ItemController(ItemService itemService, SecurityService securityService) {
         this.itemService = itemService;
         this.securityService = securityService;
+    }
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemDTO> getAllItems(@RequestHeader String authorization) {
+        securityService.validateAuthorization(authorization, Role.ADMIN);
+        return itemService.getAllItems();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

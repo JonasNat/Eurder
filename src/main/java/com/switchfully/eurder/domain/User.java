@@ -16,7 +16,6 @@ public class User {
     private final Address address;
     private final String phoneNumber;
     private final Role role;
-
     private static final String EMAIL_REGEX = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
 
     public User(String firstName, String lastName, String emailAddress, String password, Address address, String phoneNumber, Role role) {
