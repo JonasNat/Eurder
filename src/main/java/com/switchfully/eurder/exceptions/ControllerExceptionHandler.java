@@ -1,6 +1,7 @@
 package com.switchfully.eurder.exceptions;
 
 import com.switchfully.eurder.exceptions.item.ItemAlreadyExistsException;
+import com.switchfully.eurder.exceptions.item.ItemNotFoundException;
 import com.switchfully.eurder.exceptions.security.UnauthorizedException;
 import com.switchfully.eurder.exceptions.security.WrongPasswordException;
 import com.switchfully.eurder.exceptions.user.CustomerAlreadyExistsException;
@@ -32,6 +33,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler({
             ItemAlreadyExistsException.class,
+            ItemNotFoundException.class
     })
     protected void ItemExceptionHandler(RuntimeException ex, HttpServletResponse response) throws IOException {
         logger.warn(ex.getMessage());

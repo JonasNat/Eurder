@@ -3,6 +3,7 @@ package com.switchfully.eurder.services;
 import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.dto.CreateItemDTO;
 import com.switchfully.eurder.exceptions.item.ItemAlreadyExistsException;
+import com.switchfully.eurder.exceptions.item.ItemNotFoundException;
 import com.switchfully.eurder.exceptions.user.RequiredFieldIsEmptyException;
 import com.switchfully.eurder.mapper.ItemMapper;
 import com.switchfully.eurder.repositories.ItemRepository;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 class ItemServiceTest {
     private Item item1;
@@ -49,5 +51,10 @@ class ItemServiceTest {
         assertThatThrownBy(() -> itemService.addItem(itemToAdd))
                 .isInstanceOf(RequiredFieldIsEmptyException.class).
                 hasMessageContaining("Required field missing");
+    }
+
+        @Test
+    void givenARepositoryOfItems_whenFindingByUnknownId_ExceptionIsThrown() {
+        assertThatExceptionOfType(ItemNotFoundException.class).isThrownBy(() -> itemService.findItemById("InvalidId"));
     }
 }

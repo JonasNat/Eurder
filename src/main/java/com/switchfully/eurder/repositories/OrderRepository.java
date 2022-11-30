@@ -20,6 +20,10 @@ public class OrderRepository {
         return Optional.ofNullable(orders.get(id));
     }
 
+    public List<Order> findByCustomerId(String customerId) {
+        return orders.values().stream().filter(order -> order.getCustomerId().equals(customerId)).toList();
+    }
+
     public Order create(Order order) {
         orders.put(order.getId(), order);
         return order;
