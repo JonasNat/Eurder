@@ -1,11 +1,14 @@
 package com.switchfully.eurder.controllers;
 
 import com.switchfully.eurder.domain.Address;
+import com.switchfully.eurder.domain.Role;
+import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.dto.CreateCustomerDTO;
 import com.switchfully.eurder.dto.CustomerDTO;
 import com.switchfully.eurder.repositories.UserRepository;
 import io.restassured.RestAssured;
 import org.apache.http.HttpStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,9 +19,38 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class UserControllerTest {
+class CustomerControllerTest {
+    private User admin;
+    private User customer;
+    @Autowired
+    private final UserRepository userRepository = new UserRepository();
     @LocalServerPort
     private int port;
+
+    @BeforeEach
+    void setup() {
+        admin = new User(
+                "Jonas",
+                "Nata",
+                "jonas@eurder.com",
+                "password",
+                new Address("Teststraat", "50", "2000", "Antwerp"),
+                "0498416686",
+                Role.ADMIN
+        );
+
+        customer = new User(
+                "Frederik",
+                "Sok",
+                "frederik@eurder.com",
+                "password",
+                new Address("Teststraat", "50", "2000", "Antwerp"),
+                "0498416686",
+                Role.CUSTOMER
+        );
+        userRepository.create(admin);
+        userRepository.create(customer);
+    }
 
     @Test
     void givenARequestBody_whenRegisteringNewCustomer_httpStatusCreatedAndNewCustomerReturned() {
@@ -33,7 +65,7 @@ class UserControllerTest {
         CustomerDTO customerDTO =
                 RestAssured
                 .given().contentType(JSON).body(userToRegister).accept(JSON)
-                .when().port(port).post("/users")
+                .when().port(port).post("/customers")
                 .then().assertThat().statusCode(HttpStatus.SC_CREATED).extract().as(CustomerDTO.class);
 
         assertThat(customerDTO.getFirstName()).isEqualTo(userToRegister.firstName());
@@ -55,7 +87,25 @@ class UserControllerTest {
 
         RestAssured
                 .given().contentType(JSON).body(userToRegister).accept(JSON)
-                .when().port(port).post("/users")
+                .when().port(port).post("/customers")
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    void givenARepositoryWithUsers_whenGettingAllCustomers_httpStatusOk() {
+        RestAssured
+                .given()
+                .auth().preemptive().basic(admin.getEmailAddress(), admin.getPassword())
+                .when().port(port).get("/customers")
+                .then().assertThat().statusCode(HttpStatus.SC_OK);
+    }
+
+    @Test
+    void givenARepositoryWithUsers_whenGettingAllCustomersWithoutBeingAdmin_httpStatusForbidden() {
+        RestAssured
+                .given()
+                .auth().preemptive().basic(customer.getEmailAddress(), customer.getPassword())
+                .when().port(port).get("/customers")
+                .then().assertThat().statusCode(HttpStatus.SC_FORBIDDEN);
     }
 }

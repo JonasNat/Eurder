@@ -4,6 +4,7 @@ import com.switchfully.eurder.domain.Address;
 import com.switchfully.eurder.domain.Role;
 import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.dto.CreateCustomerDTO;
+import com.switchfully.eurder.dto.CustomerDTO;
 import com.switchfully.eurder.exceptions.user.CustomerAlreadyExistsException;
 import com.switchfully.eurder.exceptions.user.InvalidEmailAddressException;
 import com.switchfully.eurder.exceptions.user.RequiredFieldIsEmptyException;
@@ -12,6 +13,9 @@ import com.switchfully.eurder.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class UserServiceTest {
@@ -79,6 +83,22 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.register(userToRegister))
                 .isInstanceOf(InvalidEmailAddressException.class)
                 .hasMessageContaining("Invalid email");
+    }
+
+    @Test
+    void givenARepositoryOfUsers_whenGettingAllCustomers_returnsAllUsersWhoAreCustomers() {
+        User customer2 = new User(
+                "firstname2",
+                "lastname2",
+                "email2@eurder.com",
+                "password",
+                new Address("street", "housenumber", "0000", "city"),
+                "0000000000",
+                Role.CUSTOMER);
+        CustomerDTO customer1DTO = userMapper.toDto(userRepository.create(customer1));
+        CustomerDTO customer2DTO = userMapper.toDto(userRepository.create(customer2));
+
+        assertThat(userService.getAllCustomers()).containsExactlyInAnyOrder(customer1DTO, customer2DTO);
     }
 
 }

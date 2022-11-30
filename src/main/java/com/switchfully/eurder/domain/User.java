@@ -3,6 +3,7 @@ package com.switchfully.eurder.domain;
 import com.switchfully.eurder.exceptions.user.InvalidEmailAddressException;
 import com.switchfully.eurder.exceptions.user.RequiredFieldIsEmptyException;
 
+import java.util.Objects;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -79,5 +80,27 @@ public class User {
 
     public boolean doesPasswordMatch(String password) {
         return password.equals(this.password);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return emailAddress.equals(user.emailAddress);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(emailAddress);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                '}';
     }
 }

@@ -4,8 +4,6 @@ import com.switchfully.eurder.domain.Order;
 import com.switchfully.eurder.domain.OrderLine;
 import com.switchfully.eurder.dto.CreateOrderDTO;
 import com.switchfully.eurder.dto.CreateOrderLineDTO;
-import com.switchfully.eurder.dto.OrderDTO;
-import com.switchfully.eurder.dto.OrderLineDTO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

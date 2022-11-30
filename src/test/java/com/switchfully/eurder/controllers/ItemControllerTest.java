@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ItemControllerTest {
     @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository = new UserRepository();
     private User admin;
     private User customer;
 
@@ -50,6 +50,7 @@ class ItemControllerTest {
         );
 
         userRepository.create(customer);
+        userRepository.create(admin);
     }
 
     @Test
@@ -86,7 +87,7 @@ class ItemControllerTest {
         RestAssured
                 .given().contentType(JSON).body(itemToAdd).accept(JSON)
                 .auth().preemptive().basic(admin.getEmailAddress(), admin.getPassword())
-                .when().port(port).post("/users")
+                .when().port(port).post("/customers")
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
     }
 

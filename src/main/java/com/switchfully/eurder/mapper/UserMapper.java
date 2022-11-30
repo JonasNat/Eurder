@@ -6,6 +6,8 @@ import com.switchfully.eurder.dto.CreateCustomerDTO;
 import com.switchfully.eurder.dto.CustomerDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class UserMapper {
     public CustomerDTO toDto(User user) {
@@ -28,6 +30,10 @@ public class UserMapper {
                 userToRegister.phoneNumber(),
                 Role.CUSTOMER
         );
+    }
+
+    public List<CustomerDTO> toDto(List<User> customers) {
+        return customers.stream().map(this::toDto).toList();
     }
 
 

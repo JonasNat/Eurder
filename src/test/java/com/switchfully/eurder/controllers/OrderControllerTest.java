@@ -29,9 +29,7 @@ class OrderControllerTest {
     private UserRepository userRepository;
     private Item item1;
     private Item item2;
-    private User admin;
     private User customer;
-
     private CreateOrderDTO orderToPlace;
     @LocalServerPort
     private int port;
@@ -45,15 +43,6 @@ class OrderControllerTest {
         CreateOrderLineDTO orderLine1 = new CreateOrderLineDTO(item1.getId(), 1);
         CreateOrderLineDTO orderLine2 = new CreateOrderLineDTO(item2.getId(), 5);
         orderToPlace = new CreateOrderDTO(List.of(orderLine1, orderLine2));
-        admin = new User(
-                "Jonas",
-                "Nata",
-                "jonas@eurder.com",
-                "password",
-                new Address("Teststraat", "50", "2000", "Antwerp"),
-                "0498416686",
-                Role.ADMIN
-        );
 
         customer = new User(
                 "Frederik",
@@ -64,7 +53,6 @@ class OrderControllerTest {
                 "0498416686",
                 Role.CUSTOMER
         );
-
         userRepository.create(customer);
     }
 
