@@ -5,6 +5,7 @@ import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.domain.Role;
 import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.dto.*;
+import com.switchfully.eurder.mapper.OrderMapper;
 import com.switchfully.eurder.repositories.ItemRepository;
 import com.switchfully.eurder.repositories.OrderRepository;
 import com.switchfully.eurder.repositories.UserRepository;
@@ -31,6 +32,8 @@ class OrderControllerTest {
     private UserRepository userRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private OrderMapper orderMapper;
     private Item item1;
     private Item item2;
     private User customer;
@@ -69,6 +72,11 @@ class OrderControllerTest {
                         .when().port(port).post("/orders")
                         .then().assertThat().statusCode(HttpStatus.SC_CREATED).extract().as(OrderDTO.class);
 
+        assertThat(orderDTO.getCustomerId()).isEqualTo(customer.getId());
+
+        //some weird test
+        assertThat(orderDTO.getOrderLines().stream().mapToDouble(OrderLineDTO::amount).sum())
+                .isEqualTo(orderToPlace.orderLines().stream().mapToDouble(CreateOrderLineDTO::amount).sum());
     }
 
     @Test
