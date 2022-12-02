@@ -61,7 +61,7 @@ class ItemControllerTest {
     @Test
     void givenARequestBody_whenAddingANewItem_httpStatusCreatedAndNewItemReturned() {
         CreateItemDTO itemToAdd = new CreateItemDTO(
-                "name",
+                "randomName",
                 "testItem",
                 6.0,
                 30
