@@ -4,7 +4,6 @@ import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.domain.Order;
 import com.switchfully.eurder.domain.OrderLine;
 import com.switchfully.eurder.dto.CreateOrderDTO;
-import com.switchfully.eurder.dto.CreateOrderLineDTO;
 import com.switchfully.eurder.dto.OrderDTO;
 import com.switchfully.eurder.dto.OrderLineDTO;
 import com.switchfully.eurder.exceptions.item.ItemNotFoundException;
@@ -29,18 +28,28 @@ public class OrderService {
     }
 
     public OrderDTO placeOrder(CreateOrderDTO orderToPlace, String customerId) {
-        orderToPlace.orderLines().forEach(orderLine -> {
-            if (itemRepository.findById(orderLine.itemId()).isEmpty()) {
-                throw new ItemNotFoundException("Item not found");
-            }
-        });
-
+        checkAvailability(orderToPlace);
         Order order = orderRepository.create(orderMapper.toOrder(orderToPlace, customerId));
+        setOrderLinePrice(order);
         order.getOrderLines().forEach(orderLine -> orderLine.setShippingDate(calculateShippingDate(orderLine)));
         order.getOrderLines().forEach(orderLine -> itemRepository.findById(orderLine.getItemId()).get().subtractAmount(orderLine.getAmount()));
-        order.getOrderLines().forEach(orderLine -> orderLine.setOrderLinePrice(orderLine.getAmount() * itemRepository.findById(orderLine.getItemId()).get().getPrice()));
+        order.getOrderLines().forEach(orderLine -> orderLine.setOrderId(order.getId()));
         double orderPrice = order.setOrderPrice(calculateOrderPrice(order));
+        OrderDTO orderDTO = mapToDto(order, customerId);
+        orderDTO.setTotalPrice(orderPrice);
+        return orderDTO;
+    }
 
+    public LocalDate calculateShippingDate(OrderLine orderLine) {
+        Item item = itemRepository.findById(orderLine.getItemId()).get();
+        return item.getAmount() < orderLine.getAmount() ? LocalDate.now().plusDays(7) : LocalDate.now().plusDays(1);
+    }
+
+    public double calculateOrderPrice(Order order) {
+        return order.getOrderLines().stream().mapToDouble(OrderLine::getOrderLinePrice).sum();
+    }
+
+    public OrderDTO mapToDto(Order order, String customerId) {
         List<OrderLineDTO> orderLines = order.getOrderLines().stream()
                 .map(orderLine -> new OrderLineDTO(
                         itemRepository.findById(orderLine.getItemId()).get().getName(),
@@ -49,24 +58,22 @@ public class OrderService {
                         orderLine.getShippingDate())
                 )
                 .toList();
-
-        OrderDTO orderDTO = new OrderDTO(customerId, orderLines);
-        orderDTO.setTotalPrice(orderPrice);
-        return orderDTO;
+        return new OrderDTO(customerId, orderLines);
     }
 
-    public LocalDate calculateShippingDate(OrderLine orderLine) {
-        Item item = itemRepository.findById(orderLine.getItemId()).orElseThrow(() -> new ItemNotFoundException("Item Not Found"));
-        if (item.getAmount() < orderLine.getAmount()) {
-            return LocalDate.now().plusDays(7);
-        }
-        return LocalDate.now().plusDays(1);
+    public void checkAvailability(CreateOrderDTO orderToPlace) {
+        orderToPlace.orderLines().forEach(orderLine -> {
+            if (itemRepository.findById(orderLine.itemId()).isEmpty()) {
+                throw new ItemNotFoundException("Item not found, order is cancelled");
+            }
+        });
     }
 
-    public double calculateOrderPrice(Order order) {
-        return order.getOrderLines().stream().mapToDouble(OrderLine::getOrderLinePrice).sum();
+    public void setOrderLinePrice(Order order) {
+        order.getOrderLines().
+                forEach(orderLine -> orderLine.setOrderLinePrice(
+                        orderLine.getAmount() * itemRepository.findById(orderLine.getItemId()).get().getPrice())
+                );
     }
-
-
 
 }

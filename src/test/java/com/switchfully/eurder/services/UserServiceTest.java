@@ -5,24 +5,21 @@ import com.switchfully.eurder.domain.Role;
 import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.dto.CreateCustomerDTO;
 import com.switchfully.eurder.dto.CustomerDTO;
-import com.switchfully.eurder.exceptions.user.CustomerAlreadyExistsException;
-import com.switchfully.eurder.exceptions.user.InvalidEmailAddressException;
-import com.switchfully.eurder.exceptions.user.RequiredFieldIsEmptyException;
+import com.switchfully.eurder.exceptions.user.*;
 import com.switchfully.eurder.mapper.UserMapper;
 import com.switchfully.eurder.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.List;
+import static org.assertj.core.api.Assertions.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
+@SpringBootTest
 class UserServiceTest {
     private User customer1;
-    private final UserRepository userRepository = new UserRepository();
-    private final UserMapper userMapper = new UserMapper();
-    private final UserService userService = new UserService(userRepository, userMapper);
+    private UserRepository userRepository;
+    private UserMapper userMapper;
+    private UserService userService;
 
     @BeforeEach
     void setup() {
@@ -34,6 +31,9 @@ class UserServiceTest {
                 new Address("street", "housenumber", "0000", "city"),
                 "0000000000",
                 Role.CUSTOMER);
+        userRepository = new UserRepository();
+        userMapper = new UserMapper();
+        userService = new UserService(userRepository, userMapper);
     }
 
     @Test
@@ -99,6 +99,20 @@ class UserServiceTest {
         CustomerDTO customer2DTO = userMapper.toDto(userRepository.create(customer2));
 
         assertThat(userService.getAllCustomers()).containsExactlyInAnyOrder(customer1DTO, customer2DTO);
+    }
+
+    @Test
+    void givenARepositoryOfUsers_whenFindingCustomerById_returnsCorrectCustomer() {
+        userRepository.create(customer1);
+
+        assertThat(userService.findById(customer1.getId())).isEqualTo(userMapper.toDto(customer1));
+    }
+
+    @Test
+    void givenARepositoryOfUsers_whenFindingCustomerWrongId_throwsException() {
+        userRepository.create(customer1);
+
+        assertThatExceptionOfType(CustomerNotFoundException.class).isThrownBy(() -> userService.findById("invalidId"));
     }
 
 }

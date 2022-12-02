@@ -9,20 +9,28 @@ import com.switchfully.eurder.mapper.ItemMapper;
 import com.switchfully.eurder.repositories.ItemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
+@SpringBootTest
 class ItemServiceTest {
     private Item item1;
-    private final ItemRepository itemRepository = new ItemRepository();
-    private final ItemMapper itemMapper = new ItemMapper();
-    private final ItemService itemService = new ItemService(itemRepository, itemMapper);
+    private ItemRepository itemRepository;
+
+    private ItemMapper itemMapper;
+    private ItemService itemService;
 
     @BeforeEach
     void setup() {
+        itemRepository = new ItemRepository();
+        itemMapper = new ItemMapper();
+        itemService = new ItemService(itemRepository, itemMapper);
         item1 = new Item("name", "testItem", 5.0, 20);
     }
+
 
     @Test
     void givenARepositoryOfItems_whenAddingANewItemWithAnExistingName_exceptionIsThrown() {

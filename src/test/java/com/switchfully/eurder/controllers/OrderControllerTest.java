@@ -18,7 +18,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import java.util.List;
 
 import static io.restassured.http.ContentType.JSON;
-import static org.assertj.core.api.Assertions.assertThat;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class OrderControllerTest {

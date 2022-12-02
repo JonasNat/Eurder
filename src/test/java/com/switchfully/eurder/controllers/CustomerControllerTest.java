@@ -101,11 +101,29 @@ class CustomerControllerTest {
     }
 
     @Test
-    void givenARepositoryWithUsers_whenGettingAllCustomersWithoutBeingAdmin_httpStatusForbidden() {
+    void givenARepositoryWithUsers_whenFindingACustomerById_httpStatusOk() {
+        RestAssured
+                .given()
+                .auth().preemptive().basic(admin.getEmailAddress(), admin.getPassword())
+                .when().port(port).get("/customers/" + customer.getId())
+                .then().assertThat().statusCode(HttpStatus.SC_OK);
+    }
+
+    @Test
+    void givenARepositoryWithUsers_whenFindingACustomerByInvalidId_httpStatusOk() {
+        RestAssured
+                .given()
+                .auth().preemptive().basic(admin.getEmailAddress(), admin.getPassword())
+                .when().port(port).get("/customers/invalidId")
+                .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    void givenARepositoryWithUsers_whenFindingACustomerByIdWithoutBeingAdmin_httpStatusForbidden() {
         RestAssured
                 .given()
                 .auth().preemptive().basic(customer.getEmailAddress(), customer.getPassword())
-                .when().port(port).get("/customers")
+                .when().port(port).get("/customers/" + customer.getId())
                 .then().assertThat().statusCode(HttpStatus.SC_FORBIDDEN);
     }
 }

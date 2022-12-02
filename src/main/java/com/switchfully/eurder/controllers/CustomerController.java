@@ -29,6 +29,13 @@ public class CustomerController {
         return userService.getAllCustomers();
     }
 
+    @GetMapping(value = "{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDTO findCustomerById(@PathVariable String id, @RequestHeader String authorization) {
+        securityService.validateAuthorization(authorization, Role.ADMIN);
+        return userService.findById(id);
+    }
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO register(@RequestBody CreateCustomerDTO userToRegister) {

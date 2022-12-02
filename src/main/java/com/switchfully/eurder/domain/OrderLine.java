@@ -8,8 +8,8 @@ public class OrderLine {
     private final String itemId;
     private final long amount;
     private LocalDate shippingDate = null;
-
     private double orderLinePrice;
+    private String orderId;
 
     public OrderLine(String itemId, long amount) {
         id = UUID.randomUUID().toString();
@@ -43,5 +43,13 @@ public class OrderLine {
 
     public void setOrderLinePrice(double orderLinePrice) {
         this.orderLinePrice = orderLinePrice;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }

@@ -53,6 +53,15 @@ class UserRepositoryTest {
     void givenARepositoryOfUsers_whenFindingUserByEmail_returnsCorrectUser() {
         userRepository.create(customer1);
 
-        assertThat(userRepository.findByEmailAddress("email@eurder.com")).hasValueSatisfying(customer -> assertThat(customer.getLastName()).isEqualTo("lastname"));
+        assertThat(userRepository.findByEmailAddress(customer1.getEmailAddress()))
+                .hasValueSatisfying(customer -> assertThat(customer.getLastName()).isEqualTo("lastname"));
+    }
+
+    @Test
+    void givenARepositoryOfUsers_whenFindingUserId_returnsCorrectUser() {
+        userRepository.create(customer1);
+
+        assertThat(userRepository.findById(customer1.getId()))
+                .hasValueSatisfying(customer -> assertThat(customer.getLastName()).isEqualTo("lastname"));
     }
 }

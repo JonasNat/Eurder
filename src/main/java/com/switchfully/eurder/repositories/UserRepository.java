@@ -30,6 +30,10 @@ public class UserRepository {
         return users.values().stream().toList();
     }
 
+    public Optional<User> findById(String id) {
+        return users.values().stream().filter(user -> user.getId().equals(id)).findFirst();
+    }
+
     public Optional<User> findByEmailAddress(String emailAddress) {
        return users.values().stream().filter(user -> user.getEmailAddress().equals(emailAddress)).findFirst();
     }
