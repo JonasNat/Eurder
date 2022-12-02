@@ -3,6 +3,7 @@ package com.switchfully.eurder.controllers;
 import com.switchfully.eurder.domain.Role;
 import com.switchfully.eurder.dto.CreateItemDTO;
 import com.switchfully.eurder.dto.ItemDTO;
+import com.switchfully.eurder.dto.UpdateItemDTO;
 import com.switchfully.eurder.security.SecurityService;
 import com.switchfully.eurder.services.ItemService;
 import org.springframework.http.HttpStatus;
@@ -34,4 +35,12 @@ public class ItemController {
         securityService.validateAuthorization(authorization, Role.ADMIN);
         return itemService.addItem(itemToAdd);
     }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.OK)
+    public ItemDTO updateItem(@PathVariable String id, @RequestBody UpdateItemDTO itemToUpdate, @RequestHeader String authorization) {
+        securityService.validateAuthorization(authorization, Role.ADMIN);
+        return itemService.updateItem(id, itemToUpdate);
+    }
+
 }

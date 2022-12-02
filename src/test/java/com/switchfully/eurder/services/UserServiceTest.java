@@ -114,5 +114,4 @@ class UserServiceTest {
 
         assertThatExceptionOfType(CustomerNotFoundException.class).isThrownBy(() -> userService.findById("invalidId"));
     }
-
 }

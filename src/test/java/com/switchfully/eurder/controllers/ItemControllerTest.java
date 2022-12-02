@@ -1,10 +1,13 @@
 package com.switchfully.eurder.controllers;
 
 import com.switchfully.eurder.domain.Address;
+import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.domain.Role;
 import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.dto.CreateItemDTO;
 import com.switchfully.eurder.dto.ItemDTO;
+import com.switchfully.eurder.dto.UpdateItemDTO;
+import com.switchfully.eurder.repositories.ItemRepository;
 import com.switchfully.eurder.repositories.UserRepository;
 import io.restassured.RestAssured;
 import org.apache.http.HttpStatus;
@@ -21,6 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 class ItemControllerTest {
     @Autowired
     private final UserRepository userRepository = new UserRepository();
+    @Autowired
+    private final ItemRepository itemRepository = new ItemRepository();
     private User admin;
     private User customer;
 
@@ -138,4 +143,28 @@ class ItemControllerTest {
                 .when().port(port).post("/items")
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST);
     }
+
+    @Test
+    void givenARequestBody_whenUpdatingAnItem_httpStatusCreatedAndUpdatedItemReturned() {
+        UpdateItemDTO itemToUpdate = new UpdateItemDTO(
+                "name",
+                "testItem",
+                6.0,
+                30
+        );
+        Item item = new Item("name", "desc", 20, 10);
+        itemRepository.create(item);
+        ItemDTO itemDTO =
+                RestAssured
+                        .given().contentType(JSON).body(itemToUpdate).accept(JSON)
+                        .auth().preemptive().basic(admin.getEmailAddress(), admin.getPassword())
+                        .when().port(port).put("/items/" + item.getId())
+                        .then().assertThat().statusCode(HttpStatus.SC_OK).extract().as(ItemDTO.class);
+
+        assertThat(item.getName()).isEqualTo(itemToUpdate.getName());
+        assertThat(item.getDescription()).isEqualTo(itemToUpdate.getDescription());
+        assertThat(item.getPrice()).isEqualTo(itemToUpdate.getPrice());
+        assertThat(item.getAmount()).isEqualTo(itemToUpdate.getAmount());
+    }
+
 }

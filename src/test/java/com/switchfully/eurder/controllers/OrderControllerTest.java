@@ -6,6 +6,7 @@ import com.switchfully.eurder.domain.Role;
 import com.switchfully.eurder.domain.User;
 import com.switchfully.eurder.dto.*;
 import com.switchfully.eurder.repositories.ItemRepository;
+import com.switchfully.eurder.repositories.OrderRepository;
 import com.switchfully.eurder.repositories.UserRepository;
 import io.restassured.RestAssured;
 import org.apache.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 
@@ -27,6 +29,8 @@ class OrderControllerTest {
     private ItemRepository itemRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private OrderRepository orderRepository;
     private Item item1;
     private Item item2;
     private User customer;
@@ -64,6 +68,7 @@ class OrderControllerTest {
                         .auth().preemptive().basic(customer.getEmailAddress(), customer.getPassword())
                         .when().port(port).post("/orders")
                         .then().assertThat().statusCode(HttpStatus.SC_CREATED).extract().as(OrderDTO.class);
+
     }
 
     @Test

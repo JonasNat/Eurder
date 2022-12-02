@@ -2,6 +2,7 @@ package com.switchfully.eurder.services;
 
 import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.dto.CreateItemDTO;
+import com.switchfully.eurder.dto.UpdateItemDTO;
 import com.switchfully.eurder.exceptions.item.ItemAlreadyExistsException;
 import com.switchfully.eurder.exceptions.item.ItemNotFoundException;
 import com.switchfully.eurder.exceptions.user.RequiredFieldIsEmptyException;
@@ -12,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
 class ItemServiceTest {
@@ -31,6 +31,13 @@ class ItemServiceTest {
         item1 = new Item("name", "testItem", 5.0, 20);
     }
 
+    @Test
+    void givenARepositoryOfItems_whenAddingANewItem_itemIsAddedToRepository() {
+        CreateItemDTO itemToAdd = new CreateItemDTO(item1.getName(), item1.getDescription(), item1.getPrice(), item1.getAmount());
+        itemService.addItem(itemToAdd);
+
+        assertThat(itemRepository.getAll()).containsExactly(item1);
+    }
 
     @Test
     void givenARepositoryOfItems_whenAddingANewItemWithAnExistingName_exceptionIsThrown() {
@@ -61,8 +68,36 @@ class ItemServiceTest {
                 hasMessageContaining("Required field missing");
     }
 
-        @Test
+    @Test
     void givenARepositoryOfItems_whenFindingByUnknownId_ExceptionIsThrown() {
         assertThatExceptionOfType(ItemNotFoundException.class).isThrownBy(() -> itemService.findItemById("InvalidId"));
+    }
+
+    @Test
+    void givenARepositoryOfItems_whenUpdatingAnItem_itemIsCorrectlyUpdated() {
+        itemRepository.create(item1);
+        UpdateItemDTO itemToUpdate = new UpdateItemDTO(
+                "newName",
+                "newTestItem2",
+                6.0,
+                30);
+
+        itemService.updateItem(item1.getId(), itemToUpdate);
+
+        assertThat(item1.getName()).isEqualTo(itemToUpdate.getName());
+        assertThat(item1.getDescription()).isEqualTo(itemToUpdate.getDescription());
+    }
+
+    @Test
+    void givenARepositoryOfItems_whenUpdatingAnItemWithNegativePrice_ExceptionIsThrown() {
+        itemRepository.create(item1);
+        UpdateItemDTO itemToUpdate = new UpdateItemDTO(
+                "newName",
+                "newTestItem2",
+                -6,
+                30
+        );
+
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> itemService.updateItem(item1.getId(), itemToUpdate));
     }
 }

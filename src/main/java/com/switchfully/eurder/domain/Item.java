@@ -7,9 +7,9 @@ import java.util.UUID;
 
 public class Item {
     private final String id;
-    private final String name;
-    private final String description;
-    private final double price;
+    private String name;
+    private String description;
+    private double price;
     private long amount;
 
     public Item(String name, String description, double price, long amount) {
@@ -38,6 +38,25 @@ public class Item {
 
     public long getAmount() {
         return amount;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setPrice(double price) {
+        if (price < 0) {
+            throw new IllegalArgumentException("Price can't be negative");
+        }
+        this.price = price;
+    }
+
+    public void setAmount(long amount) {
+        this.amount = amount;
     }
 
     public void subtractAmount(long amount) {

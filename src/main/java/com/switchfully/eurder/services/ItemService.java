@@ -3,6 +3,7 @@ package com.switchfully.eurder.services;
 import com.switchfully.eurder.domain.Item;
 import com.switchfully.eurder.dto.CreateItemDTO;
 import com.switchfully.eurder.dto.ItemDTO;
+import com.switchfully.eurder.dto.UpdateItemDTO;
 import com.switchfully.eurder.exceptions.item.ItemAlreadyExistsException;
 import com.switchfully.eurder.exceptions.item.ItemNotFoundException;
 import com.switchfully.eurder.exceptions.user.CustomerAlreadyExistsException;
@@ -36,6 +37,15 @@ public class ItemService {
             throw new ItemAlreadyExistsException("Item with this name already exists");
         }
         return mapper.toDto(repository.create(mapper.toItem(itemToAdd)));
+    }
+
+    public ItemDTO updateItem(String id, UpdateItemDTO itemToUpdate) {
+        Item item = repository.findById(id).orElseThrow(() -> new ItemNotFoundException("Item not found"));
+        item.setName(itemToUpdate.getName());
+        item.setDescription(itemToUpdate.getDescription());
+        item.setPrice(itemToUpdate.getPrice());
+        item.setAmount(itemToUpdate.getAmount());
+        return mapper.toDto(item);
     }
 
 
