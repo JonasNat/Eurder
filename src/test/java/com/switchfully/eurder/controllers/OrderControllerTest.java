@@ -16,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.annotation.DirtiesContext;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -24,6 +26,7 @@ import static io.restassured.http.ContentType.JSON;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class OrderControllerTest {
 
     @Autowired
@@ -61,22 +64,21 @@ class OrderControllerTest {
                 Role.CUSTOMER
         );
         userRepository.create(customer);
+        orderRepository = new OrderRepository();
     }
 
     @Test
     void givenARequestBody_whenPlacingANewOrder_httpStatusCreatedAndNewOrderReturned() {
-        OrderDTO orderDTO =
+        OrderDTO orderDTO2 =
                 RestAssured
                         .given().contentType(JSON).body(orderToPlace).accept(JSON)
                         .auth().preemptive().basic(customer.getEmailAddress(), customer.getPassword())
                         .when().port(port).post("/orders")
                         .then().assertThat().statusCode(HttpStatus.SC_CREATED).extract().as(OrderDTO.class);
 
-        assertThat(orderDTO.getCustomerId()).isEqualTo(customer.getId());
-
-/*        //some weird test
-        assertThat(orderDTO.getOrderLines().stream().mapToDouble(OrderLineDTO::amount).sum())
-                .isEqualTo(orderToPlace.orderLines().stream().mapToDouble(CreateOrderLineDTO::amount).sum());*/
+        assertThat(orderDTO2.getCustomerId()).isEqualTo(customer.getId());
+        assertThat(orderDTO2.getOrderLines().stream().mapToDouble(OrderLineDTO::amount).sum())
+                .isEqualTo(orderToPlace.orderLines().stream().mapToDouble(CreateOrderLineDTO::amount).sum());
     }
 
     @Test

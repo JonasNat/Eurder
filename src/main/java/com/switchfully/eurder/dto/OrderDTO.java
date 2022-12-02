@@ -3,7 +3,7 @@ package com.switchfully.eurder.dto;
 import java.util.List;
 import java.util.Objects;
 
-public final class OrderDTO {
+public class OrderDTO {
     private final String customerId;
     private final List<OrderLineDTO> orderLines;
     private double totalPrice;
